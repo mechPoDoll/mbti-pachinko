@@ -1,0 +1,2 @@
+# mbti-pachinko
+himatsubushi
