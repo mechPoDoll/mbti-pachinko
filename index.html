@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>パチンコ MBTI 진단 - 당신은 어떤 파친코 플레이어?</title>
+<link href="https://fonts.googleapis.com/css2?family=DotGothic16&family=Bagel+Fat+One&family=Black+Han+Sans&family=Gowun+Dodum&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --gold: #ffcf3f;
+    --gold-deep: #d49500;
+    --red: #e8264a;
+    --red-deep: #a30025;
+    --blue: #1c8ce8;
+    --pink: #ff5fa2;
+    --black: #161013;
+    --cream: #fff5e0;
+    --neon: #00ffd5;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    min-height: 100vh;
+    font-family: 'Gowun Dodum', sans-serif;
+    background:
+      radial-gradient(circle at 20% 10%, #3a0a1a 0%, transparent 40%),
+      radial-gradient(circle at 80% 80%, #0a1a3a 0%, transparent 45%),
+      repeating-linear-gradient(45deg, #1a0510 0 6px, #210818 6px 12px);
+    color: var(--cream);
+    overflow-x: hidden;
+  }
+
+  /* 전구 테두리 */
+  .bulb-frame { position: fixed; inset: 0; pointer-events: none; z-index: 100; }
+  .bulb-frame::before, .bulb-frame::after {
+    content: '';
+    position: absolute; left: 0; right: 0; height: 24px;
+    background-image: radial-gradient(circle, var(--gold) 0 5px, transparent 6px);
+    background-size: 28px 24px;
+    background-repeat: repeat-x;
+    filter: drop-shadow(0 0 6px var(--gold));
+    animation: blink 1.2s infinite alternate;
+  }
+  .bulb-frame::before { top: 0; }
+  .bulb-frame::after { bottom: 0; animation-delay: .6s; }
+  @keyframes blink {
+    0%, 49% { filter: drop-shadow(0 0 8px var(--gold)) brightness(1); }
+    50%, 100% { filter: drop-shadow(0 0 2px var(--red)) brightness(.55); background-image: radial-gradient(circle, var(--red) 0 5px, transparent 6px); }
+  }
+
+  .wrap { max-width: 820px; margin: 0 auto; padding: 60px 24px 80px; position: relative; }
+
+  /* 타이틀 */
+  header { text-align: center; margin-bottom: 40px; }
+  .jp-title {
+    font-family: 'Bagel Fat One', sans-serif;
+    font-size: clamp(42px, 8vw, 84px);
+    color: var(--gold);
+    text-shadow: 3px 3px 0 var(--red-deep), 6px 6px 0 var(--black), 0 0 30px rgba(255,207,63,.6);
+    letter-spacing: 2px;
+    transform: skewX(-6deg);
+    line-height: 1;
+  }
+  .jp-sub {
+    font-family: 'DotGothic16', monospace;
+    color: var(--neon);
+    font-size: clamp(13px, 1.6vw, 18px);
+    margin-top: 14px;
+    letter-spacing: 6px;
+    text-shadow: 0 0 8px var(--neon);
+  }
+  .ko-title {
+    display: inline-block;
+    margin-top: 18px;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(18px, 2.4vw, 26px);
+    background: var(--cream);
+    color: var(--red-deep);
+    padding: 6px 24px;
+    transform: rotate(-2deg);
+    border: 3px solid var(--black);
+    box-shadow: 4px 4px 0 var(--black);
+  }
+
+  /* 진행 바 */
+  .progress-wrap {
+    margin: 30px auto;
+    display: flex; align-items: center; gap: 14px;
+    font-family: 'DotGothic16', monospace;
+  }
+  .progress-bar {
+    flex: 1; height: 22px;
+    background: var(--black);
+    border: 3px solid var(--gold);
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: inset 0 2px 8px rgba(0,0,0,.6);
+    position: relative;
+  }
+  .progress-fill {
+    height: 100%;
+    background: repeating-linear-gradient(45deg, var(--red) 0 10px, var(--gold) 10px 20px);
+    transition: width .4s ease;
+    box-shadow: 0 0 12px var(--red);
+  }
+  .progress-text {
+    font-family: 'Bagel Fat One', sans-serif;
+    color: var(--gold);
+    font-size: 18px;
+    text-shadow: 2px 2px 0 var(--red-deep);
+    min-width: 60px; text-align: right;
+  }
+
+  /* 질문 카드 */
+  .card {
+    background:
+      linear-gradient(180deg, #c41030 0%, #8a0a20 50%, #5a0612 100%);
+    border: 5px solid var(--gold);
+    border-radius: 20px;
+    padding: 36px 28px 30px;
+    box-shadow: 0 0 0 4px var(--black), 0 0 40px rgba(255, 207, 63, .35), inset 0 0 30px rgba(0,0,0,.4);
+    position: relative;
+  }
+  .card::before {
+    content: 'Q';
+    position: absolute; top: -22px; left: 30px;
+    background: var(--gold);
+    color: var(--red-deep);
+    font-family: 'Bagel Fat One', sans-serif;
+    font-size: 30px;
+    width: 50px; height: 50px;
+    border: 4px solid var(--black);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 0 12px var(--gold);
+  }
+  .q-number {
+    font-family: 'DotGothic16', monospace;
+    color: var(--gold);
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-align: right;
+    margin-bottom: 8px;
+  }
+  .q-text {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(20px, 3vw, 26px);
+    color: var(--cream);
+    line-height: 1.5;
+    margin-bottom: 28px;
+    text-shadow: 2px 2px 0 var(--black);
+  }
+  .q-scene {
+    background: rgba(0,0,0,.4);
+    border: 2px dashed var(--gold);
+    border-radius: 10px;
+    padding: 14px 18px;
+    margin-bottom: 24px;
+    font-size: 15px;
+    color: var(--cream);
+    line-height: 1.6;
+    font-style: italic;
+  }
+  .q-scene::before { content: '🎰 '; font-style: normal; }
+
+  /* 옵션 버튼 */
+  .options { display: flex; flex-direction: column; gap: 14px; }
+  .opt {
+    background: var(--cream);
+    border: 4px solid var(--black);
+    border-radius: 14px;
+    padding: 16px 20px;
+    text-align: left;
+    cursor: pointer;
+    font-family: 'Gowun Dodum', sans-serif;
+    font-size: 16px;
+    color: var(--black);
+    line-height: 1.5;
+    box-shadow: 4px 4px 0 var(--black);
+    transition: transform .1s, box-shadow .1s, background .15s;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .opt:hover {
+    background: var(--gold);
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0 var(--black);
+  }
+  .opt:active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--black);
+  }
+  .opt-num {
+    font-family: 'Bagel Fat One', sans-serif;
+    background: var(--red);
+    color: var(--cream);
+    font-size: 20px;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    border: 2px solid var(--black);
+  }
+
+  /* 결과 화면 */
+  .result {
+    text-align: center;
+    background: linear-gradient(180deg, #1a0a1a 0%, #2a0518 100%);
+    border: 5px solid var(--gold);
+    border-radius: 20px;
+    padding: 44px 28px;
+    box-shadow: 0 0 0 4px var(--black), 0 0 60px rgba(255, 95, 162, .4);
+    position: relative;
+    overflow: hidden;
+  }
+  .result::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: repeating-linear-gradient(45deg, transparent 0 30px, rgba(255,207,63,.05) 30px 31px);
+    pointer-events: none;
+  }
+  .jackpot {
+    font-family: 'Bagel Fat One', sans-serif;
+    color: var(--gold);
+    font-size: clamp(28px, 5vw, 44px);
+    text-shadow: 3px 3px 0 var(--red-deep), 0 0 24px var(--gold);
+    margin-bottom: 8px;
+    animation: jackpot 0.6s infinite alternate;
+  }
+  @keyframes jackpot {
+    from { transform: scale(1); }
+    to { transform: scale(1.04); }
+  }
+  .mbti-badge {
+    display: inline-block;
+    font-family: 'Bagel Fat One', sans-serif;
+    font-size: clamp(40px, 8vw, 64px);
+    color: var(--cream);
+    background: var(--red);
+    padding: 6px 28px;
+    border: 4px solid var(--gold);
+    border-radius: 12px;
+    margin: 18px 0;
+    letter-spacing: 6px;
+    box-shadow: 0 0 30px var(--red), inset 0 0 20px rgba(0,0,0,.4);
+  }
+  .nickname {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: clamp(28px, 5vw, 42px);
+    color: var(--gold);
+    text-shadow: 3px 3px 0 var(--black);
+    margin-bottom: 6px;
+  }
+  .nickname-jp {
+    font-family: 'DotGothic16', monospace;
+    color: var(--neon);
+    font-size: 14px;
+    letter-spacing: 4px;
+    text-shadow: 0 0 6px var(--neon);
+    margin-bottom: 24px;
+  }
+  .desc {
+    background: rgba(0,0,0,.5);
+    border: 2px solid var(--gold);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: left;
+    line-height: 1.8;
+    margin: 20px 0;
+    font-size: 15px;
+  }
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin: 20px 0;
+  }
+  .stat {
+    background: var(--black);
+    border: 2px solid var(--gold);
+    border-radius: 10px;
+    padding: 12px;
+    font-family: 'DotGothic16', monospace;
+  }
+  .stat-label { color: var(--gold); font-size: 12px; letter-spacing: 2px; }
+  .stat-value { color: var(--cream); font-size: 18px; margin-top: 4px; }
+  .stat-bar {
+    margin-top: 6px;
+    height: 8px; background: rgba(255,255,255,.1); border-radius: 4px; overflow: hidden;
+  }
+  .stat-bar-fill { height: 100%; background: var(--neon); box-shadow: 0 0 6px var(--neon); }
+
+  .quote {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 18px;
+    color: var(--pink);
+    margin: 20px 0;
+    text-shadow: 2px 2px 0 var(--black);
+  }
+  .quote::before { content: '💬 "'; }
+  .quote::after { content: '"'; }
+
+  /* 버튼 */
+  .btn {
+    font-family: 'Black Han Sans', sans-serif;
+    border: none;
+    cursor: pointer;
+    padding: 14px 36px;
+    font-size: 20px;
+    letter-spacing: 3px;
+    border-radius: 50px;
+    background: linear-gradient(180deg, var(--gold) 0%, var(--gold-deep) 100%);
+    color: var(--red-deep);
+    border: 4px solid var(--black);
+    box-shadow: 0 6px 0 var(--black), 0 0 20px var(--gold);
+    transition: transform .1s, box-shadow .1s;
+    margin: 6px;
+  }
+  .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 0 var(--black), 0 0 30px var(--gold); }
+  .btn:active { transform: translateY(4px); box-shadow: 0 2px 0 var(--black); }
+
+  /* 시작 화면 */
+  .intro {
+    text-align: center;
+    background: linear-gradient(180deg, #c41030 0%, #5a0612 100%);
+    border: 5px solid var(--gold);
+    border-radius: 20px;
+    padding: 50px 28px;
+    box-shadow: 0 0 0 4px var(--black), 0 0 40px rgba(255, 207, 63, .35);
+  }
+  .intro p {
+    font-size: 17px; line-height: 1.8; margin-bottom: 16px; color: var(--cream);
+  }
+  .intro .big {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 28px;
+    color: var(--gold);
+    margin: 18px 0;
+    text-shadow: 2px 2px 0 var(--black);
+  }
+  .coins {
+    font-size: 38px; margin: 14px 0;
+    animation: coin 1.5s infinite;
+  }
+  @keyframes coin {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+  }
+
+  /* 등장 애니메이션 */
+  .fade-in { animation: fadeIn .5s ease both; }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* 공유 박스 */
+  .share-row { display: flex; gap: 10px; justify-content: center; margin-top: 14px; flex-wrap: wrap; }
+  .footer-note {
+    text-align: center;
+    margin-top: 40px;
+    font-family: 'DotGothic16', monospace;
+    color: rgba(255, 245, 224, .4);
+    font-size: 12px;
+    letter-spacing: 3px;
+  }
+
+  /* 콘페티 */
+  .confetti {
+    position: fixed; top: -10px; width: 10px; height: 10px;
+    pointer-events: none; z-index: 99;
+    animation: fall 3s linear forwards;
+  }
+  @keyframes fall {
+    0% { transform: translateY(0) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  @media (max-width: 600px) {
+    .stats { grid-template-columns: 1fr; }
+    .opt { font-size: 15px; padding: 14px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="bulb-frame"></div>
+
+<div class="wrap">
+  <header>
+    <div class="jp-title">パチンコ MBTI</div>
+    <div class="jp-sub">★ HOLE-IN-ONE PERSONALITY ★</div>
+    <div class="ko-title">당신은 어떤 파친코 플레이어?</div>
+  </header>
+
+  <div id="app"></div>
+
+  <div class="footer-note">※ 본 진단은 재미를 위한 비유적 콘텐츠입니다 ※</div>
+</div>
+
+<script>
+// ===== 12개 질문 (각 축당 3문제) =====
+const questions = [
+  {
+    scene: "오후 2시, 텅 빈 파친코 홀에 막 도착했다.",
+    q: "당신이 자리를 고르는 방법은?",
+    opts: [
+      { text: "옆자리 사람들이랑 인사 나누면서 분위기 좋은 곳", axis: "EI", val: "E" },
+      { text: "구석에 조용한 자리, 헤드폰 끼고 혼자 집중", axis: "EI", val: "I" }
+    ]
+  },
+  {
+    scene: "옆자리 아저씨가 \"이 대만 슬슬 터질 때 됐어요\"라고 한다.",
+    q: "당신의 반응은?",
+    opts: [
+      { text: "오~ 정보 고마워요! 같이 분석해봐요", axis: "EI", val: "E" },
+      { text: "네... (속으로: 내 데이터로 판단해야지)", axis: "EI", val: "I" }
+    ]
+  },
+  {
+    scene: "잭팟 터진 사람이 \"한 잔 하러 갈래요?\" 물어본다.",
+    q: "당신은?",
+    opts: [
+      { text: "콜! 단골들이랑 친해지는 게 진짜 재미", axis: "EI", val: "E" },
+      { text: "감사하지만 저는 좀 더 돌리고 갈게요", axis: "EI", val: "I" }
+    ]
+  },
+  {
+    scene: "기계 앞에 앉았다. 어떤 정보를 먼저 보는가?",
+    q: "",
+    opts: [
+      { text: "회전수, 확률 변동, 출현률 데이터부터 체크", axis: "SN", val: "S" },
+      { text: "이 기계가 오늘 \"느낌이\" 좋은지 직감으로 본다", axis: "SN", val: "N" }
+    ]
+  },
+  {
+    scene: "친구가 \"왜 이 대를 골랐어?\"라고 물어본다.",
+    q: "당신의 대답은?",
+    opts: [
+      { text: "어제 회전수 850, 평균 회전 142니까 기대값이 +", axis: "SN", val: "S" },
+      { text: "몰라, 그냥 얘가 나 부르는 것 같았어", axis: "SN", val: "N" }
+    ]
+  },
+  {
+    scene: "신기종이 출시됐다.",
+    q: "당신의 첫 반응은?",
+    opts: [
+      { text: "스펙표부터 본다. 확률, 출현률, ST 시스템...", axis: "SN", val: "S" },
+      { text: "연출이 화려하네! 세계관이 흥미롭다", axis: "SN", val: "N" }
+    ]
+  },
+  {
+    scene: "초보 친구가 5만원을 빌려달라며 \"제발\"이라고 한다.",
+    q: "당신은?",
+    opts: [
+      { text: "안 돼. 빌려주면 너 더 위험해져 (단호)", axis: "TF", val: "T" },
+      { text: "음... 표정 보니까 진짜 힘든가 보네 (마음 약해짐)", axis: "TF", val: "F" }
+    ]
+  },
+  {
+    scene: "옆자리에서 어떤 분이 큰돈을 잃고 한숨을 쉰다.",
+    q: "당신은?",
+    opts: [
+      { text: "본인 책임. 나도 내 게임에 집중", axis: "TF", val: "T" },
+      { text: "괜히 마음이 쓰여서 자판기 음료라도 사드린다", axis: "TF", val: "F" }
+    ]
+  },
+  {
+    scene: "오늘 30만원을 잃었다.",
+    q: "집에 돌아가서 당신은?",
+    opts: [
+      { text: "엑셀에 기록. 어디서 잘못됐는지 분석", axis: "TF", val: "T" },
+      { text: "자괴감... \"내가 또 왜 그랬을까\" 곱씹는다", axis: "TF", val: "F" }
+    ]
+  },
+  {
+    scene: "오늘의 파친코 일정.",
+    q: "당신의 스타일은?",
+    opts: [
+      { text: "예산 10만, 손절 5만, 익절 20만 — 미리 정해둠", axis: "JP", val: "J" },
+      { text: "흐름 따라간다. 분위기 좋으면 더, 아님 빠짐", axis: "JP", val: "P" }
+    ]
+  },
+  {
+    scene: "잭팟이 터졌다! 잔고가 +25만.",
+    q: "당신의 행동은?",
+    opts: [
+      { text: "목표 달성. 칩 환전하고 바로 퇴장", axis: "JP", val: "J" },
+      { text: "흐름 탔는데 여기서 멈춰? 한 판 더!", axis: "JP", val: "P" }
+    ]
+  },
+  {
+    scene: "친구가 \"내일 같이 갈래?\"라고 물어본다.",
+    q: "당신의 답변은?",
+    opts: [
+      { text: "내일 1시 출발, 4시 복귀, 어느 홀? 라고 정해야 함", axis: "JP", val: "J" },
+      { text: "ㅇㅇ 콜~ 일어나서 컨디션 보고 연락할게", axis: "JP", val: "P" }
+    ]
+  }
+];
+
+// ===== 16가지 결과 (파친코 플레이어 유형) =====
+const results = {
+  ISTJ: {
+    nickname: "엑셀 회전수 장인",
+    jp: "DATA-PRO TYPE",
+    emoji: "📊",
+    desc: "파친코 홀의 살아있는 데이터베이스. 기계마다 회전수, 확률 변동, 평균 출현률을 노트에 빼곡히 기록해두는 진성 데이터파입니다. 운보다 통계, 감보다 기댓값. 절대 즉흥적으로 베팅하지 않으며, 손익 관리가 칼같아서 사실상 가장 적게 잃는 유형. 다만 연출이고 뭐고 무관심하다는 게 함정.",
+    quote: "회전수 800 넘어가면 기댓값 플러스인데요?",
+    risk: 25, focus: 95, social: 30, control: 90
+  },
+  ISFJ: {
+    nickname: "용돈 지킴이형",
+    jp: "BUDGET-KEEPER TYPE",
+    emoji: "🪙",
+    desc: "오늘 쓸 5만 원만 가지고 들어가서, 정확히 그만큼만 쓰고 나오는 절제의 화신. 옆자리 어르신이 음료 사다 주면 본인도 다음에 챙겨주고, 단골 점원 이름까지 외우는 따뜻한 단골. 큰돈은 절대 안 베팅하지만 매주 같은 시간 같은 자리에서 만날 수 있는 파친코 홀의 마스코트.",
+    quote: "오늘은 5만 원만요. 더는 안 돼요.",
+    risk: 15, focus: 70, social: 65, control: 95
+  },
+  INFJ: {
+    nickname: "기계와 교감하는 점쟁이",
+    jp: "MYSTIC SEER TYPE",
+    emoji: "🔮",
+    desc: "파친코 홀 한복판에서 명상하는 사람. \"이 대가 오늘 나를 부르는 느낌\"을 진지하게 믿으며, 신기하게도 그 직감이 자주 맞아서 본인도 의심하지 않습니다. 데이터는 안 보지만 사람과 기계의 \"기운\"을 읽어내는 묘한 능력자. 큰 한 방을 노리기보단 자기만의 의식적 루틴을 즐깁니다.",
+    quote: "오늘은 이 대가 아니야. 다른 곳으로 가야 해.",
+    risk: 50, focus: 85, social: 35, control: 70
+  },
+  INTJ: {
+    nickname: "기댓값 사냥꾼",
+    jp: "EV-HUNTER TYPE",
+    emoji: "🎯",
+    desc: "파친코를 \"확률 게임\"으로 정의하고 수학적으로 접근하는 냉정한 전략가. 어떤 기종의 기댓값이 플러스인지 미리 분석해서 그 기계에서만 게임. 감정 베팅은 인생에서 한 번도 해본 적 없으며, 일확천금엔 관심도 없고 \"장기적으로 이기는\" 시스템 구축이 목표. 사실상 직업.",
+    quote: "이건 도박이 아니라 기댓값 운용이야.",
+    risk: 35, focus: 95, social: 20, control: 95
+  },
+  ISTP: {
+    nickname: "기계 분해 마니아",
+    jp: "MACHINE-NERD TYPE",
+    emoji: "🔧",
+    desc: "이기든 지든 별 감흥 없고, 그저 \"이 기계 어떻게 돌아가는지\"가 궁금한 공돌이형. ST 시스템, 라운드 진입 조건, 액정 연출 트리거를 줄줄 외우고 있습니다. 게임이 끝나면 기계 옆에 붙은 스펙표를 한참 들여다보는 사람. 돈에는 무덤덤하지만 메커니즘 파악엔 진심.",
+    quote: "이거 ST 잔존 30회전 남았네. 흥미롭다.",
+    risk: 45, focus: 80, social: 25, control: 65
+  },
+  ISFP: {
+    nickname: "연출 감상러",
+    jp: "AESTHETIC-PLAYER TYPE",
+    emoji: "🎨",
+    desc: "잭팟보다 연출의 아름다움이 중요한 예술가형. 좋아하는 캐릭터 등장하는 기종만 골라서 플레이하고, 화려한 액정 연출이 나오면 진심으로 감탄합니다. 액수에는 무심하지만 \"오늘은 그 노래가 안 나왔어ㅠ\" 같은 걸로 진심 아쉬워하는 유형. 파친코를 게임이 아닌 체험으로 즐깁니다.",
+    quote: "방금 연출 미쳤다... 이래서 이 기계 좋아.",
+    risk: 40, focus: 60, social: 40, control: 55
+  },
+  INFP: {
+    nickname: "낭만 한 방러",
+    jp: "DREAMER TYPE",
+    emoji: "🌙",
+    desc: "\"오늘은 왠지 인생 역전할 것 같은 느낌\"으로 매번 들어가는 순수한 낭만파. 잭팟이 터지면 진심으로 눈물 글썽이고, 잃으면 \"내가 그래도 즐거웠으니까\"라며 합리화하는 마음 여린 플레이어. 손절을 못 해서 자주 깊게 들어가지만, 본인은 그것도 인생 경험이라고 생각합니다.",
+    quote: "이번엔 진짜 느낌이 와... 진짜로...",
+    risk: 80, focus: 50, social: 45, control: 30
+  },
+  INTP: {
+    nickname: "확률론 박사",
+    jp: "THEORIST TYPE",
+    emoji: "🧪",
+    desc: "파친코 홀에 앉아서 베이즈 정리를 떠올리는 사람. \"진짜 1/319 확률이 맞는지\" 본인이 직접 시뮬레이션 돌려보고, 변동 확률의 분산을 계산하는 학자형. 정작 베팅은 적게 하고 관찰만 오래 하는 게 특징. 머릿속이 가설로 가득해서, 게임보다 게임의 메타가 더 재밌습니다.",
+    quote: "이론적으로는 평균 회귀가 일어나야 하는데...",
+    risk: 30, focus: 90, social: 15, control: 75
+  },
+  ESTP: {
+    nickname: "도파민 추구형",
+    jp: "DOPAMINE-CHASER TYPE",
+    emoji: "🔥",
+    desc: "파친코 홀의 슈퍼스타. 잭팟 연출이 시작되면 자리에서 일어나서 환호하고, 잃어도 호탕하게 웃어넘기는 즉흥파. 큰돈을 거는 데 망설임이 없으며, \"한 방\"을 노리는 진짜 갬블러. 짜릿함이 인생의 연료라서 손절선 같은 건 들어본 적도 없습니다. 가장 빨리 잃지만 가장 즐거워합니다.",
+    quote: "어차피 인생 한 방, 가즈아!!",
+    risk: 95, focus: 60, social: 80, control: 15
+  },
+  ESFP: {
+    nickname: "축제형 플레이어",
+    jp: "FESTIVAL TYPE",
+    emoji: "🎉",
+    desc: "파친코를 \"놀이공원\"이라고 생각하는 사람. 친구들이랑 우르르 몰려가서 옆자리 사람과도 금방 친해지고, 잭팟 터지면 모르는 사람한테 음료 돌리는 인싸. 액수보다 분위기가 중요해서, 적게 따도 \"오늘 진짜 재밌었다!\" 하고 만족. 파친코 홀이 필요로 하는 그 에너지.",
+    quote: "어머 이거 봐봐!! 같이 봐 같이!!",
+    risk: 70, focus: 40, social: 95, control: 25
+  },
+  ENFP: {
+    nickname: "스토리 빌더형",
+    jp: "STORYTELLER TYPE",
+    emoji: "✨",
+    desc: "파친코 게임 한 번 갔다 오면 친구들한테 30분짜리 무용담을 만들어내는 사람. \"내가 마지막 1만원 남았을 때 갑자기 연출이 시작되는데...\" 매번 이야기가 영화 한 편. 베팅 자체는 즉흥적이지만, 본인 인생의 한 챕터로 의미 부여하는 능력자. 지나도 스토리니까 괜찮습니다.",
+    quote: "이거 진짜 영화 같은 일이 일어났는데 들어볼래?",
+    risk: 75, focus: 55, social: 90, control: 30
+  },
+  ENTP: {
+    nickname: "시스템 해킹러",
+    jp: "EXPLOITER TYPE",
+    emoji: "💡",
+    desc: "\"이 기종에 분명히 패턴이 있을 것\"이라며 매번 새로운 공략법을 시도하는 발명가형. 어디선가 들은 도시전설(\"오후 7시에 회전수 700이면 무조건 터진다\" 같은 거)을 직접 검증해보고, 본인만의 이론을 만들어 친구들한테 영업합니다. 절반은 맞고 절반은 틀리지만 본인은 항상 자신만만.",
+    quote: "내가 발견했는데, 이 기계 패턴이 있어.",
+    risk: 65, focus: 70, social: 75, control: 50
+  },
+  ESTJ: {
+    nickname: "파치프로형",
+    jp: "PRO-PLAYER TYPE",
+    emoji: "👑",
+    desc: "파친코를 \"직업\"으로 대하는 진성 프로. 매일 같은 시간에 출근하듯 입장하고, 노트에 모든 결과를 기록하며, 손익 계산이 칼같이 맞아떨어집니다. 후배들한테 \"감으로 하지 마\"라고 잔소리하는 게 일과. 실제로 연 단위로 보면 플러스인 몇 안 되는 유형. 파친코 홀의 호랑이 선배.",
+    quote: "이게 직업이야. 감정 빼고 시스템대로.",
+    risk: 50, focus: 95, social: 60, control: 95
+  },
+  ESFJ: {
+    nickname: "단골 분위기메이커",
+    jp: "REGULAR-HOST TYPE",
+    emoji: "☕",
+    desc: "홀 직원들이 다 알아보는 진성 단골. 옆자리 어르신 챙기고, 누가 큰돈 잃으면 같이 한숨 쉬어주는 따뜻한 사람. 본인이 잭팟 터지면 절반은 동료 단골들 음료 돌리는 데 씁니다. 사실 파친코 자체보다 \"여기서 만나는 사람들\"이 좋아서 다니는 유형. 홀의 정서적 지주.",
+    quote: "오늘도 다들 잘 됐어요? 음료 한 잔씩 해요.",
+    risk: 45, focus: 60, social: 95, control: 70
+  },
+  ENFJ: {
+    nickname: "초보 인솔자형",
+    jp: "GUIDE TYPE",
+    emoji: "🤝",
+    desc: "친구를 처음 파친코에 데려와 놓고 \"여기까지만 해, 더는 안 돼\"라며 케어하는 책임감의 화신. 본인 게임은 둘째치고 친구 손익부터 챙기며, 누가 너무 깊게 들어가면 진심으로 말립니다. 파친코를 사랑하지만 동시에 그 위험성을 가장 잘 알고 다른 사람을 보호하려는 의외의 보호자.",
+    quote: "오늘 여기까지만 하자. 그게 너한테 좋아.",
+    risk: 40, focus: 75, social: 85, control: 80
+  },
+  ENTJ: {
+    nickname: "원정 정복자",
+    jp: "CONQUEROR TYPE",
+    emoji: "⚔️",
+    desc: "\"이 도시의 모든 핫한 기종을 다 마스터하겠다\"는 야망으로 멀리 원정까지 가는 정복형. 새 기종이 나오면 첫날 입장해서 분석하고, 친구들한테 공략법을 정리해서 공유하는 리더. 베팅도 큼직하고 결단력 있게. 결과만 보면 들쭉날쭉하지만 항상 \"다음 판\"을 향해 나아갑니다.",
+    quote: "다음 주에 신기종 나와. 그때부터 시작이야.",
+    risk: 75, focus: 85, social: 70, control: 75
+  }
+};
+
+// ===== 상태 =====
+let state = { idx: 0, scores: { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 }, started: false };
+const app = document.getElementById('app');
+
+// ===== 화면 렌더 =====
+function renderIntro() {
+  app.innerHTML = `
+    <div class="intro fade-in">
+      <div class="coins">🪙 🎰 🪙</div>
+      <p class="big">잭팟이 터질지, 빈 손으로 나올지...</p>
+      <p>당신이 파친코 홀에 들어선다면<br>어떤 플레이어가 될까요?</p>
+      <p>12개의 짜릿한 상황을 통해<br>당신의 <b style="color:var(--gold)">파친코 인격</b>을 진단해드립니다.</p>
+      <button class="btn" onclick="startTest()">▶ 게임 START</button>
+    </div>
+  `;
+}
+
+function renderQuestion() {
+  const q = questions[state.idx];
+  const total = questions.length;
+  const pct = ((state.idx) / total) * 100;
+  app.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-text">${state.idx + 1}/${total}</div>
+    </div>
+    <div class="card fade-in" key="${state.idx}">
+      <div class="q-number">QUESTION ${String(state.idx + 1).padStart(2, '0')}</div>
+      ${q.scene ? `<div class="q-scene">${q.scene}</div>` : ''}
+      <div class="q-text">${q.q || '당신의 선택은?'}</div>
+      <div class="options">
+        ${q.opts.map((o, i) => `
+          <button class="opt" onclick="answer('${o.axis}','${o.val}')">
+            <span class="opt-num">${i + 1}</span>
+            <span>${o.text}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+function answer(axis, val) {
+  state.scores[val]++;
+  state.idx++;
+  if (state.idx >= questions.length) {
+    renderResult();
+  } else {
+    renderQuestion();
+  }
+}
+
+function calcMBTI() {
+  const s = state.scores;
+  return (s.E >= s.I ? 'E' : 'I') + (s.S >= s.N ? 'S' : 'N') + (s.T >= s.F ? 'T' : 'F') + (s.J >= s.P ? 'J' : 'P');
+}
+
+function renderResult() {
+  const type = calcMBTI();
+  const r = results[type];
+  app.innerHTML = `
+    <div class="result fade-in">
+      <div class="jackpot">🎰 大当たり JACKPOT! 🎰</div>
+      <div class="mbti-badge">${type}</div>
+      <div style="font-size:50px; margin: 6px 0;">${r.emoji}</div>
+      <div class="nickname">${r.nickname}</div>
+      <div class="nickname-jp">★ ${r.jp} ★</div>
+
+      <div class="quote">${r.quote}</div>
+
+      <div class="desc">${r.desc}</div>
+
+      <div class="stats">
+        <div class="stat">
+          <div class="stat-label">RISK 베팅 과감성</div>
+          <div class="stat-value">${r.risk}</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:${r.risk}%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">FOCUS 집중력</div>
+          <div class="stat-value">${r.focus}</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:${r.focus}%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">SOCIAL 사교성</div>
+          <div class="stat-value">${r.social}</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:${r.social}%"></div></div>
+        </div>
+        <div class="stat">
+          <div class="stat-label">CONTROL 자제력</div>
+          <div class="stat-value">${r.control}</div>
+          <div class="stat-bar"><div class="stat-bar-fill" style="width:${r.control}%"></div></div>
+        </div>
+      </div>
+
+      <div class="share-row">
+        <button class="btn" onclick="restart()">🔄 다시 하기</button>
+        <button class="btn" onclick="copyResult('${type}')">📋 결과 복사</button>
+      </div>
+    </div>
+  `;
+  fireConfetti();
+}
+
+function startTest() {
+  state.started = true;
+  renderQuestion();
+}
+
+function restart() {
+  state = { idx: 0, scores: { E:0, I:0, S:0, N:0, T:0, F:0, J:0, P:0 }, started: false };
+  renderIntro();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function copyResult(type) {
+  const r = results[type];
+  const text = `🎰 파친코 MBTI 진단 결과 🎰\n\n${type} - ${r.nickname}\n${r.emoji} "${r.quote}"\n\n${r.desc}`;
+  navigator.clipboard.writeText(text).then(() => {
+    alert('결과가 복사되었어요! 붙여넣기로 공유하세요 🎰');
+  }).catch(() => {
+    alert('복사에 실패했어요. 직접 복사해주세요!');
+  });
+}
+
+function fireConfetti() {
+  const colors = ['#ffcf3f', '#e8264a', '#ff5fa2', '#00ffd5', '#fff5e0'];
+  for (let i = 0; i < 60; i++) {
+    const c = document.createElement('div');
+    c.className = 'confetti';
+    c.style.left = Math.random() * 100 + 'vw';
+    c.style.background = colors[Math.floor(Math.random() * colors.length)];
+    c.style.animationDelay = Math.random() * 0.6 + 's';
+    c.style.animationDuration = (2 + Math.random() * 2) + 's';
+    if (Math.random() > 0.5) c.style.borderRadius = '50%';
+    document.body.appendChild(c);
+    setTimeout(() => c.remove(), 4000);
+  }
+}
+
+// 초기 렌더
+renderIntro();
+</script>
+</body>
+</html>
