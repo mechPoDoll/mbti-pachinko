@@ -5,8 +5,9 @@
 
 ## 🚀 바로 플레이하기
 
-[![PLAY NOW](https://img.shields.io/badge/▶_GAME_START-FFCF3F?style=for-the-badge&labelColor=A30025&color=FFCF3F)](https://mechpodoll.github.io/mbti-pachinko/)
+[<img src="./play_button.svg" alt="GAME START" width="420">](https://mechpodoll.github.io/mbti-pachinko/)
 
+> 👆 **위 슬롯머신을 클릭하면 진단이 시작됩니다!**
 ---
 
 ## 📖 소개
