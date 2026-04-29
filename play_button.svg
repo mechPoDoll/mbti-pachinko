@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="420" height="180" viewBox="0 0 420 180">
+  <defs>
+    <linearGradient id="redGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#c41030"/>
+      <stop offset="100%" stop-color="#5a0612"/>
+    </linearGradient>
+    <linearGradient id="goldGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#ffe066"/>
+      <stop offset="100%" stop-color="#d49500"/>
+    </linearGradient>
+    <linearGradient id="leverShaft" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#888888"/>
+      <stop offset="50%" stop-color="#e8e8e8"/>
+      <stop offset="100%" stop-color="#888888"/>
+    </linearGradient>
+    <radialGradient id="leverBall" cx="35%" cy="35%">
+      <stop offset="0%" stop-color="#ff6b80"/>
+      <stop offset="100%" stop-color="#a30025"/>
+    </radialGradient>
+    <symbol id="star" viewBox="0 0 24 24">
+      <polygon points="12,2 15,9 22,9 16.5,13.5 18.5,21 12,16.5 5.5,21 7.5,13.5 2,9 9,9" fill="#ffcf3f" stroke="#161013" stroke-width="1"/>
+    </symbol>
+  </defs>
+
+  <rect x="4" y="14" width="352" height="152" rx="14" fill="url(#redGrad)" stroke="#ffcf3f" stroke-width="4"/>
+
+  <use href="#star" x="14" y="22" width="20" height="20"/>
+  <use href="#star" x="326" y="22" width="20" height="20"/>
+  <use href="#star" x="14" y="138" width="20" height="20"/>
+  <use href="#star" x="326" y="138" width="20" height="20"/>
+
+  <text x="180" y="42" font-family="'Arial Black',sans-serif" font-size="18" font-weight="900" fill="#ffcf3f" text-anchor="middle" letter-spacing="4">パチンコ MBTI</text>
+
+  <rect x="44" y="60" width="56" height="60" rx="6" fill="#fff5e0" stroke="#161013" stroke-width="3"/>
+  <text x="72" y="102" font-family="'Arial Black',sans-serif" font-size="36" fill="#a30025" text-anchor="middle">7</text>
+  <rect x="108" y="60" width="56" height="60" rx="6" fill="#fff5e0" stroke="#161013" stroke-width="3"/>
+  <text x="136" y="102" font-family="'Arial Black',sans-serif" font-size="36" fill="#a30025" text-anchor="middle">7</text>
+  <rect x="172" y="60" width="56" height="60" rx="6" fill="#fff5e0" stroke="#161013" stroke-width="3"/>
+  <text x="200" y="102" font-family="'Arial Black',sans-serif" font-size="36" fill="#a30025" text-anchor="middle">7</text>
+
+  <rect x="244" y="65" width="92" height="50" rx="25" fill="#161013"/>
+  <rect x="246" y="63" width="88" height="48" rx="24" fill="url(#goldGrad)" stroke="#161013" stroke-width="3"/>
+  <text x="290" y="94" font-family="'Arial Black',sans-serif" font-size="18" font-weight="900" fill="#a30025" text-anchor="middle" letter-spacing="3">START</text>
+
+  <text x="180" y="148" font-family="Arial,sans-serif" font-size="12" font-weight="bold" fill="#fff5e0" text-anchor="middle" letter-spacing="3">CLICK TO PLAY</text>
+
+  <rect x="356" y="80" width="14" height="40" rx="3" fill="#161013" stroke="#ffcf3f" stroke-width="2"/>
+  <rect x="368" y="40" width="8" height="62" rx="4" fill="url(#leverShaft)" stroke="#161013" stroke-width="1.5"/>
+  <circle cx="372" cy="34" r="16" fill="url(#leverBall)" stroke="#161013" stroke-width="2.5"/>
+  <ellipse cx="367" cy="29" rx="5" ry="3" fill="#fff5e0" opacity="0.5"/>
+</svg>
